@@ -1,0 +1,45 @@
+You need to generate an SL private/public key pair in order to run
+this example program.  To do this you need to do the following steps:
+
+1.  Generate your private key.  E.g., see:
+http://www.openssl.org/docs/HOWTO/keys.txt
+
+The main step is:
+
+A RSA key can be used both for encryption and for signing.
+
+Generating a key for the RSA algorithm is quite easy, all you have to
+do is the following:
+
+  openssl genrsa -des3 -out privkey.pem 2048
+
+With this variant, you will be prompted for a protecting password.  If
+you don't want your key to be protected by a password, remove the flag
+'-des3' from the command line above.
+
+NOTE: if you intend to use the key together with a server
+certificate, it may be a good thing to avoid protecting it
+with a password, since that would mean someone would have to
+type in the password every time the server needs to access
+the key.
+
+The number 2048 is the size of the key, in bits.  Today, 2048 or
+higher is recommended for RSA keys, as fewer amount of bits is
+consider insecure or to be insecure pretty soon.
+
+2. Now we need a certificate.  To do this (from http://www.openssl.org/docs/HOWTO/certificates.txt) you need to do the following:
+
+Creating a self-signed test certificate
+
+If you don't want to deal with another certificate authority, or just want
+to create a test certificate for yourself.  This is similar to creating a
+certificate request, but creates a certificate instead of a certificate
+request.  This is NOT the recommended way to create a CA certificate, see
+ca.txt.
+
+   openssl req -new -x509 -key privkey.pem -out cacert.pem -days 1095
+
+3.  Now you should have the "cacert.pem" and "privkey.pem" files needed for 
+the example program.
+
+Paul Plassmann
