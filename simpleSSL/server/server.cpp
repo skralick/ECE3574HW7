@@ -46,7 +46,7 @@ Server::Server(QWidget *parent) : QWidget(parent)
              << tr("Security is important as your clasmates are always wiresharking your traffic.")
              << tr("You will survive ECE 3574.");*/
     //connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
-    connect(sslServer, SIGNAL(newConnection()), this, SLOT(sendString()));
+    connect(sslServer, SIGNAL(newConnection()), this, SLOT(handleNewConnection()));
 
     //QHBoxLayout *buttonLayout = new QHBoxLayout;
     //buttonLayout->addStretch(1);
@@ -60,19 +60,7 @@ Server::Server(QWidget *parent) : QWidget(parent)
 
     //setWindowTitle(tr("Secure Fortune Server"));
 }
-
-void Server::sendString()
-{
-    QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_0);
-    qDebug() << "In sendClient";
-    out << (quint16)0;
-    //out << fortunes.at(qrand() % fortunes.size());
-    out << QString("STRING TO BE SEND TO THE THINGGGGGG");
-    out.device()->seek(0);
-    out << (quint16)(block.size() - sizeof(quint16));
-
+void Server::handleNewConnection(){
     QSslSocket *clientConnection = sslServer->nextPendingConnection();
     if (!clientConnection->waitForEncrypted(1000)){
         qDebug() << "Waited for 1 second for encryption handshake without success";
@@ -81,6 +69,22 @@ void Server::sendString()
     qDebug() << "Successfully waited for secure handshake...";
     connect(clientConnection, SIGNAL(disconnected()),
             clientConnection, SLOT(deleteLater()));
-    clientConnection->write(block);
-    clientConnection->disconnectFromHost();
+
+    socketList["First"] = clientConnection;
+    sendString("stefdfgd");
+}
+void Server::sendString(QString input)
+{
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_0);
+    qDebug() << "In sendClient";
+    out << (quint16)0;
+    //out << fortunes.at(qrand() % fortunes.size());
+    out << input;
+    out.device()->seek(0);
+    out << (quint16)(block.size() - sizeof(quint16));
+
+    socketList["First"]->write(block);
+    socketList["First"]->disconnectFromHost();
 }

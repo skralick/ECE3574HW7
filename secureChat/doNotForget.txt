@@ -1,0 +1,7 @@
+dont forget to add/fix the following
+
+names at the top of every widget and window, let the client know who they are and maybe who theyre talking to
+
+graceful deaths, something isnt workinga bout when your friend your chatting with closes
+
+exit buttons that are connected to things

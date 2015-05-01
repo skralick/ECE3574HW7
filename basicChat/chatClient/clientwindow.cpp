@@ -46,7 +46,8 @@ clientWindow::clientWindow(QString name, QWidget *parent) :
     connect(m_client, SIGNAL(removeClient(QString)), this, SLOT(removeClient(QString)));
 
     //Connection to attempt to remove the blank window
-    connect(m_client, SIGNAL(closeThisWindow()), this, SLOT(closeEarly()));
+    //connect(m_client, SIGNAL(closeThisWindow()), this, SLOT(closeEarly()));
+    connect(m_client, SIGNAL(closeThisWindow()), this, SLOT(hide()));
 
     //Connection to close the window
     connect(ui -> exitChatButton, SIGNAL(clicked()), this, SLOT(close()));
@@ -92,7 +93,10 @@ void clientWindow::removeClient(QString in)
 //Attempts to makes the blank window to invisible
 void clientWindow::closeEarly()
 {
-    this -> setVisible(false);
+    //this -> setVisible(false);
+    qDebug() << "Sdfsdfsdfsdf";
+    hide();
+    //this->close();
 
 }
 

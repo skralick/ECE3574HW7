@@ -16,10 +16,13 @@ public:
     Server(QWidget *parent = 0);
 
 private slots:
-    void sendString();
+	void handleNewConnection();
+public slots:
+    void sendString(QString input);
 
 private:
 	SSLServer *sslServer;
+	QHash<QString, QSslSocket*> socketList;
 
 };
 

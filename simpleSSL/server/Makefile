@@ -911,6 +911,7 @@ server_main.o: server_main.cpp /usr/include/qt5/QtWidgets/QApplication \
 		/usr/include/qt5/QtCore/qtimezone.h \
 		/usr/include/qt5/QtCore/qxmlstream.h \
 		/usr/include/qt5/QtCore/qtcoreversion.h \
+		/usr/include/qt5/QtCore/QTextStream \
 		server.h \
 		SSLServer.h \
 		/usr/include/qt5/QtNetwork/QTcpServer \

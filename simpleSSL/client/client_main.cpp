@@ -9,8 +9,8 @@ int main(int argc, char *argv[])
     
     qDebug() <<"client will be here";
 
-	QString hostIp = QString("192.168.2.5");
-    QString port = QString("56362");
+	QString hostIp = QString("127.0.0.1");
+    QString port = QString(" 46366");
     
 
     if(argc == 3){

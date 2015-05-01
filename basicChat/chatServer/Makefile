@@ -1336,7 +1336,46 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtNetwork/qtnetworkversion.h \
 		server.h \
 		../include/common.h \
-		ui_mainwindow.h
+		ui_mainwindow.h \
+		/usr/include/qt5/QtWidgets/QAction \
+		/usr/include/qt5/QtWidgets/qaction.h \
+		/usr/include/qt5/QtWidgets/qactiongroup.h \
+		/usr/include/qt5/QtWidgets/QApplication \
+		/usr/include/qt5/QtWidgets/qapplication.h \
+		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt5/QtGui/qguiapplication.h \
+		/usr/include/qt5/QtGui/qinputmethod.h \
+		/usr/include/qt5/QtWidgets/QButtonGroup \
+		/usr/include/qt5/QtWidgets/qbuttongroup.h \
+		/usr/include/qt5/QtWidgets/QHeaderView \
+		/usr/include/qt5/QtWidgets/qheaderview.h \
+		/usr/include/qt5/QtWidgets/qabstractitemview.h \
+		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
+		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
+		/usr/include/qt5/QtWidgets/qstyleoption.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		/usr/include/qt5/QtWidgets/qstyle.h \
+		/usr/include/qt5/QtWidgets/qtabbar.h \
+		/usr/include/qt5/QtWidgets/qrubberband.h \
+		/usr/include/qt5/QtWidgets/QMenuBar \
+		/usr/include/qt5/QtWidgets/qmenubar.h \
+		/usr/include/qt5/QtWidgets/qmenu.h \
+		/usr/include/qt5/QtWidgets/QStatusBar \
+		/usr/include/qt5/QtWidgets/qstatusbar.h \
+		/usr/include/qt5/QtWidgets/QTextEdit \
+		/usr/include/qt5/QtWidgets/qtextedit.h \
+		/usr/include/qt5/QtGui/qtextdocument.h \
+		/usr/include/qt5/QtGui/qtextoption.h \
+		/usr/include/qt5/QtGui/qtextcursor.h \
+		/usr/include/qt5/QtGui/qtextformat.h \
+		/usr/include/qt5/QtGui/qpen.h \
+		/usr/include/qt5/QtWidgets/QToolBar \
+		/usr/include/qt5/QtWidgets/qtoolbar.h \
+		/usr/include/qt5/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
 
 server.o: server.cpp server.h \
