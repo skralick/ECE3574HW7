@@ -15,6 +15,7 @@ class Server : public QWidget
 
 public:
     Server(QWidget *parent = 0);
+    void exit();
 
 private slots:
     void handleNewConnection();
@@ -27,14 +28,15 @@ public slots:
     void sendClientList(QString destinationClient);
     void disconnectClient(QString clientName);
     void displayServerInfo();
+    QString getServerInfo();
 
 signals:
     void displayString(QString);
 
 private:
-    SSLServer *sslServer;
-    QSslSocket *tempSocket;
-    QHash<QString, QSslSocket*> socketList;
+    SSLServer *m_sslServer;
+    QSslSocket *m_tempSocket;
+    QHash<QString, QSslSocket*> m_socketList;
     QThread *m_thread;
 
 };

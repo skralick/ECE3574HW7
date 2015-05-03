@@ -6,7 +6,7 @@ graceful deaths, something isnt workinga bout when your friend your chatting wit
 
 exit buttons that are connected to things
 
-client should have a flag, shouldSendDeathToServer so when a clientName is taken we arent sending a remove me signal
+client should have a flag, should sendDeathToServer so when a clientName is taken we arent sending a remove me signal
 
 when the server closes it sends the message "Server has closed". we want the clients to know to display a message or do something when that happens. 
 

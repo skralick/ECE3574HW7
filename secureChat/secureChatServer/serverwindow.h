@@ -18,6 +18,7 @@ public:
 private:
     Ui::serverWindow *ui;
     Server *m_server;
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // SERVERWINDOW_H

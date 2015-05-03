@@ -3,16 +3,16 @@
 Server::Server(QWidget *parent) : QWidget(parent)
 {
 
-    sslServer = new SSLServer(this);
-    if (!sslServer->listen()) {
+    m_sslServer = new SSLServer(this);
+    if (!m_sslServer->listen()) {
         QMessageBox::critical(this, tr("Secure Fortune Server"),
                               tr("Unable to start the server: %1.")
-                              .arg(sslServer->errorString()));
+                              .arg(m_sslServer->errorString()));
         close();
         return;
     }
 
-    connect(sslServer, SIGNAL(newConnection()), this, SLOT(handleNewConnection()));
+    connect(m_sslServer, SIGNAL(newConnection()), this, SLOT(handleNewConnection()));
     displayServerInfo();
 }
 
@@ -33,22 +33,41 @@ void Server::displayServerInfo(){
 
 
     emit displayString(tr("The server is running on\n\nIP: %1\nport: %2\n\n"
-                            "Run the Secure Fortune Client example now.")
-                         .arg(ipAddress).arg(sslServer->serverPort()));
+                            "Run the client now.")
+                         .arg(ipAddress).arg(m_sslServer->serverPort()));
+}
+
+QString Server::getServerInfo(){
+    QString ipAddress;
+    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+    // use the first non-localhost IPv4 address
+    for (int i = 0; i < ipAddressesList.size(); ++i) {
+        if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
+            ipAddressesList.at(i).toIPv4Address()) {
+            ipAddress = ipAddressesList.at(i).toString();
+            break;
+        }
+    }
+    // if we did not find one, use IPv4 localhost
+    if (ipAddress.isEmpty())
+        ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
+
+
+    return (tr("The server is running on\nIP: %1\nport: %2\n"
+                            "Run clients now.")
+                         .arg(ipAddress).arg(m_sslServer->serverPort()));
 }
 
 void Server::handleNewConnection(){
-    tempSocket = sslServer->nextPendingConnection();
-    connect(tempSocket, SIGNAL(readyRead()), this, SLOT(readIncomingMsg()));
-    if (!tempSocket->waitForEncrypted(1000)){
+    m_tempSocket = m_sslServer->nextPendingConnection();
+    connect(m_tempSocket, SIGNAL(readyRead()), this, SLOT(readIncomingMsg()));
+    if (!m_tempSocket->waitForEncrypted(1000)){
         //qDebug() << "Waited for 1 second for encryption handshake without success";
         return;
     }
     //qDebug() << "Successfully waited for secure handshake...";
-    connect(tempSocket, SIGNAL(disconnected()),
-            tempSocket, SLOT(deleteLater()));
-
-    //socketList["First"] = clientConnection;
+    connect(m_tempSocket, SIGNAL(disconnected()),
+            m_tempSocket, SLOT(deleteLater()));
 }
 void Server::sendString(QString input)
 {
@@ -60,8 +79,8 @@ void Server::sendString(QString input)
     out << input;
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
-    tempSocket->write(block);
-    tempSocket->flush();
+    m_tempSocket->write(block);
+    m_tempSocket->flush();
 }
 
 void Server::sendStringToClient(QString client, QString input)
@@ -74,14 +93,14 @@ void Server::sendStringToClient(QString client, QString input)
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
 
-    socketList[client]->write(block);
-    socketList[client]->flush();
+    m_socketList[client]->write(block);
+    m_socketList[client]->flush();
 }
 
 void Server::sendStringToAllClients(QString input)
 {
-    QHash<QString, QSslSocket*>::const_iterator i = socketList.constBegin();
-    while (i != socketList.constEnd()) {
+    QHash<QString, QSslSocket*>::const_iterator i = m_socketList.constBegin();
+    while (i != m_socketList.constEnd()) {
         sendStringToClient(i.key(), input);
         ++i;
     }
@@ -89,8 +108,8 @@ void Server::sendStringToAllClients(QString input)
 
 void Server::sendClientList(QString destinationClient)
 {
-    QHash<QString, QSslSocket*>::const_iterator i = socketList.constBegin();
-    while (i != socketList.constEnd()) {
+    QHash<QString, QSslSocket*>::const_iterator i = m_socketList.constBegin();
+    while (i != m_socketList.constEnd()) {
         sendStringToClient(destinationClient, "A:" + i.key());
         ++i;
     }
@@ -99,12 +118,12 @@ void Server::sendClientList(QString destinationClient)
 void Server::readIncomingMsg()
 {
     quint16 blockSize = 0;
-    QSslSocket *localSocket = tempSocket;
-    QHash<QString, QSslSocket*>::const_iterator i = socketList.constBegin();
-    while (i != socketList.constEnd()) {
+    QSslSocket *localSocket = m_tempSocket;
+    QHash<QString, QSslSocket*>::const_iterator i = m_socketList.constBegin();
+    while (i != m_socketList.constEnd()) {
         //qDebug() << i.key() << ": " << i.value()->bytesAvailable() << endl;
         if(i.value()->bytesAvailable()){
-            localSocket = socketList[i.key()];
+            localSocket = m_socketList[i.key()];
             break;
         }
         ++i;
@@ -128,8 +147,8 @@ void Server::readIncomingMsg()
     in >> nextFortune;
     if (nextFortune.left(2) == "A:"){
         QString msg = "ConnectionSuccess";
-        QHash<QString, QSslSocket*>::const_iterator i = socketList.constBegin();
-        while (i != socketList.constEnd()) {
+        QHash<QString, QSslSocket*>::const_iterator i = m_socketList.constBegin();
+        while (i != m_socketList.constEnd()) {
             if(i.key() == nextFortune.split(":")[1]){
                 msg = "ClientNameTaken";
             }
@@ -137,25 +156,33 @@ void Server::readIncomingMsg()
         }
         sendString(msg);
         sendStringToAllClients(nextFortune);//send the newGuy message to everyOne
-        socketList[nextFortune.split(":")[1]] = tempSocket;
+        m_socketList[nextFortune.split(":")[1]] = m_tempSocket;
         m_thread = new QThread();
-        tempSocket->moveToThread(m_thread);
+        m_tempSocket->moveToThread(m_thread);
         m_thread->start();
-        tempSocket = 0;
+        m_tempSocket = 0;
         sendClientList(nextFortune.split(":")[1]);//send the current clientsList to newGuy
+        emit displayString("New Client: " + nextFortune.split(":")[1]);
     }else if (nextFortune.left(2) == "M:"){
         sendStringToClient(nextFortune.split(":")[2], nextFortune);//sendSplit[2] a message from split[1]
+        emit displayString("Message from: " + nextFortune.split(":")[1] + " to " + nextFortune.split(":")[2]);
     }else if (nextFortune.left(2) == "R:"){
         //disconnectClient(nextFortune.split(":")[1]);
-        socketList.remove(nextFortune.split(":")[1]);
+        m_socketList.remove(nextFortune.split(":")[1]);
         sendStringToAllClients(nextFortune);
+        emit displayString("Closing client: " + nextFortune.split(":")[1]);
     }else if (nextFortune.left(2) == "S:"){
         sendStringToClient(nextFortune.split(":")[2], nextFortune);
+        emit displayString("Starting conversation with: " + nextFortune.split(":")[1] + " and " + nextFortune.split(":")[2]);
     }
 
     qDebug() << nextFortune;
 }
 //this should probably be used above when an R: is revieved but it seg faults...is it because the cleint closes the connection faster
 void Server::disconnectClient(QString clientName){
-    socketList[clientName]->disconnectFromHost();
+    m_socketList[clientName]->disconnectFromHost();
+}
+
+void Server::exit(){
+    sendStringToAllClients("Server has closed");
 }

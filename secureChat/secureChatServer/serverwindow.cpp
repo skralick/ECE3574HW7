@@ -9,10 +9,16 @@ serverWindow::serverWindow(QWidget *parent) :
 
     m_server = new Server();
     connect(m_server, SIGNAL(displayString(QString)), ui->infoWindow, SLOT(append(QString)));
-    m_server->displayServerInfo();
+    ui->serverInfoLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    ui->serverInfoLabel->setText(m_server->getServerInfo());
 }
 
 serverWindow::~serverWindow()
 {
     delete ui;
+}
+
+void serverWindow::closeEvent(QCloseEvent *event)
+{
+    m_server->exit();
 }
