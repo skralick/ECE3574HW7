@@ -48,6 +48,8 @@ public:
     //Function to return the name of the partner client
     QString getPartner();
 
+    void endChat();
+
 public slots:
     //Function to send a message
     void sendString(QString input);

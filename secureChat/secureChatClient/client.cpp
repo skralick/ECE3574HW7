@@ -179,12 +179,23 @@ void Client::readFortune()
     }else if(currentFortune.left(2)== "R:"){
         emit removePossibleClient(currentFortune.split(":")[1]);
         if(currentFortune.split(":")[1] == m_partnerName){
+            qDebug() << "your partner didnt just disconnet";
             emit writeStringToChatWindow("Partner disconnected");
         }
-        emit removePossibleConnectedClient(currentFortune.split(":")[1]);//this could be simpler send a bool also not working
+        //emit removePossibleConnectedClient(currentFortune.split(":")[1]);//this could be simpler send a bool also not working
+    }else if(currentFortune.left(2)== "E:" && currentFortune.split(":")[1] != m_name ){
+        emit removePossibleClient(currentFortune.split(":")[1]);
     }else if(currentFortune == "Server has closed"){
         qDebug() << "server closing emitting";
         emit writeStringToChatWindow(currentFortune);
+    }else if(currentFortune.left(2) == "D:" && currentFortune.split(":")[1] == m_partnerName){
+        emit writeStringToChatWindow("Partner disconnected");//your partner sent a D: to you
+        emit addClientToList(currentFortune.split(":")[1]);//so add them to your clients you can add
+    }else if(currentFortune.left(2) == "D:" && currentFortune.split(":")[1] == m_name){
+        //you were the one to send it out dont do anytihng
+    }else if(currentFortune.left(2) == "D:" ){
+        //you observed a converstaion end add them both to your clientlist
+        emit addClientToList(currentFortune.split(":")[1]);
     }
     emit recievedString(currentFortune);
     blockSize = 0;
@@ -251,4 +262,9 @@ void Client::exit(){
 }
 QString Client::getPartner(){
     return m_partnerName;
+}
+
+
+void Client::endChat(){
+    sendString("D:" + m_name);
 }

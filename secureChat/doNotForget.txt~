@@ -11,3 +11,7 @@ client should have a flag, shouldSendDeathToServer so when a clientName is taken
 when the server closes it sends the message "Server has closed". we want the clients to know to display a message or do something when that happens.  -- done
 
 setup close event on chatWindow.cpp -- done
+
+selection window needs to read S: message and know it cant connect to those in converstaiont
+
+communcation needs a message for E:  end converstaion so those people join the seleectable list again

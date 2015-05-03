@@ -89,6 +89,7 @@ void SelectionWindow::on_connectButton_clicked()
     //Update GUI
     m_chatWindow.setName(m_name);
     m_chatWindow.setClient(m_client);
+    connect(&m_chatWindow, SIGNAL(chatClosing()), this, SLOT(show()));
     m_chatWindow.show();
     this -> hide();
 
