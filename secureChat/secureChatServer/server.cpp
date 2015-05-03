@@ -173,6 +173,8 @@ void Server::readIncomingMsg()
         sendStringToAllClients(nextFortune);
         emit displayString("Closing client: " + nextFortune.split(":")[1]);
     }else if (nextFortune.left(2) == "S:"){
+        sendStringToAllClients("E:" + nextFortune.split(":")[1]);
+        sendStringToAllClients("E:" + nextFortune.split(":")[2]);
         sendStringToClient(nextFortune.split(":")[2], nextFortune);
         emit displayString("Starting conversation with: " + nextFortune.split(":")[1] + " and " + nextFortune.split(":")[2]);
     }
