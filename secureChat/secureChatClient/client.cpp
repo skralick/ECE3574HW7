@@ -103,6 +103,8 @@ void Client::sendString(QString input)
 
     //connect(secureSocket, SIGNAL(readyRead()), this, SLOT(readIncomingMsg()));
     secureSocket->write(block);
+    secureSocket->flush();
+    qDebug() << "the message has been sent";
     //socketList["First"]->disconnectFromHost();
 }
 
@@ -141,6 +143,7 @@ void Client::displayCertificateWindow()
 
 void Client::readFortune()
 {
+    qDebug() << "recieved a fortune";
     if(secureSocket->bytesAvailable() == 0){
         return;
     }
@@ -163,6 +166,9 @@ void Client::readFortune()
     currentFortune = nextFortune;
     qDebug() << currentFortune;
     if(currentFortune == "ClientNameTaken"){
+        QMessageBox msgBox;
+        msgBox.setText("This name has already been used!");
+        msgBox.exec();
         m_shouldNotifyServerRemove = false;
         emit closeThisWindow();
     }else if(currentFortune == "ConnectionSuccess"){

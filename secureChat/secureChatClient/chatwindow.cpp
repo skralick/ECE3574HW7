@@ -36,7 +36,7 @@ void ChatWindow::setClient(Client *client)
     connect(m_client, SIGNAL(recievedMsg(QString)), this, SLOT(recievedMsg(QString)));
 
     //Connection to remove connection to another client
-    connect(m_client, SIGNAL(removePossibleConnectedClient(QString)), this, SLOT(removePossiblePartner(QString)));
+    //connect(m_client, SIGNAL(removePossibleConnectedClient(QString)), this, SLOT(removePossiblePartner(QString)));
     //good spot to connect more client connections
 
     connect(m_client, SIGNAL(writeStringToChatWindow(QString)), ui->chatArea, SLOT(append(QString)));
