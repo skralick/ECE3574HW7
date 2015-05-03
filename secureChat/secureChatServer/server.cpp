@@ -151,6 +151,7 @@ void Server::readIncomingMsg()
         while (i != m_socketList.constEnd()) {
             if(i.key() == nextFortune.split(":")[1]){
                 msg = "ClientNameTaken";
+                return;
             }
             ++i;
         }

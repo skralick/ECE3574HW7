@@ -32,6 +32,8 @@ InitWindow::InitWindow(QWidget *parent) :
     //Initially disable the connect button
     //Should only be enabled when the user has a client name
     ui -> connectToServerButton->setEnabled(false);
+
+    this->setWindowTitle("Server Connection Window");
 }
 
 //Destructor

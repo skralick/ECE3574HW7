@@ -17,6 +17,7 @@ ChatWindow::ChatWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(ui->msgEdit, SIGNAL(returnPressed()), ui->SendButton, SLOT(click()));
+    connect(ui->exitButton, SIGNAL(clicked()), this, SLOT(close()));
 }
 
 //Destructor
@@ -37,7 +38,10 @@ void ChatWindow::setClient(Client *client)
     //Connection to remove connection to another client
     connect(m_client, SIGNAL(removePossibleConnectedClient(QString)), this, SLOT(removePossiblePartner(QString)));
     //good spot to connect more client connections
+
+    connect(m_client, SIGNAL(writeStringToChatWindow(QString)), ui->chatArea, SLOT(append(QString)));
 }
+
 
 //Function to update the chat window once connected to the other client
 void ChatWindow::on_SendButton_clicked()
@@ -51,6 +55,7 @@ void ChatWindow::on_SendButton_clicked()
 void ChatWindow::setName(QString name)
 {
     m_name = name;
+    this->setWindowTitle(name + "'s Chat Window");
 }
 
 void ChatWindow::recievedMsg(QString msg)
@@ -61,6 +66,7 @@ void ChatWindow::recievedMsg(QString msg)
 //Function to close the window and client object
 void ChatWindow::closeEvent(QCloseEvent *event)
 {
+    emit chatClosing();
     //Closing client object
     m_client -> exit();
 }

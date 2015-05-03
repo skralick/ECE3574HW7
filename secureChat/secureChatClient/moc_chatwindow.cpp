@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_ChatWindow_t {
-    QByteArrayData data[7];
-    char stringdata[79];
+    QByteArrayData data[8];
+    char stringdata[91];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -30,14 +30,15 @@ struct qt_meta_stringdata_ChatWindow_t {
 static const qt_meta_stringdata_ChatWindow_t qt_meta_stringdata_ChatWindow = {
     {
 QT_MOC_LITERAL(0, 0, 10),
-QT_MOC_LITERAL(1, 11, 21),
-QT_MOC_LITERAL(2, 33, 0),
-QT_MOC_LITERAL(3, 34, 11),
-QT_MOC_LITERAL(4, 46, 3),
-QT_MOC_LITERAL(5, 50, 20),
-QT_MOC_LITERAL(6, 71, 6)
+QT_MOC_LITERAL(1, 11, 11),
+QT_MOC_LITERAL(2, 23, 0),
+QT_MOC_LITERAL(3, 24, 21),
+QT_MOC_LITERAL(4, 46, 11),
+QT_MOC_LITERAL(5, 58, 3),
+QT_MOC_LITERAL(6, 62, 20),
+QT_MOC_LITERAL(7, 83, 6)
     },
-    "ChatWindow\0on_SendButton_clicked\0\0"
+    "ChatWindow\0chatClosing\0\0on_SendButton_clicked\0"
     "recievedMsg\0msg\0removePossilePartner\0"
     "client\0"
 };
@@ -49,22 +50,28 @@ static const uint qt_meta_data_ChatWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   14, // methods
+       4,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       0,       // signalCount
+       1,       // signalCount
+
+ // signals: name, argc, parameters, tag, flags
+       1,    0,   34,    2, 0x06,
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   29,    2, 0x08,
-       3,    1,   30,    2, 0x08,
-       5,    1,   33,    2, 0x08,
+       3,    0,   35,    2, 0x08,
+       4,    1,   36,    2, 0x08,
+       6,    1,   39,    2, 0x08,
+
+ // signals: parameters
+    QMetaType::Void,
 
  // slots: parameters
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,    4,
-    QMetaType::Void, QMetaType::QString,    6,
+    QMetaType::Void, QMetaType::QString,    5,
+    QMetaType::Void, QMetaType::QString,    7,
 
        0        // eod
 };
@@ -74,10 +81,20 @@ void ChatWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     if (_c == QMetaObject::InvokeMetaMethod) {
         ChatWindow *_t = static_cast<ChatWindow *>(_o);
         switch (_id) {
-        case 0: _t->on_SendButton_clicked(); break;
-        case 1: _t->recievedMsg((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 2: _t->removePossilePartner((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 0: _t->chatClosing(); break;
+        case 1: _t->on_SendButton_clicked(); break;
+        case 2: _t->recievedMsg((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 3: _t->removePossilePartner((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
+        }
+    } else if (_c == QMetaObject::IndexOfMethod) {
+        int *result = reinterpret_cast<int *>(_a[0]);
+        void **func = reinterpret_cast<void **>(_a[1]);
+        {
+            typedef void (ChatWindow::*_t)();
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&ChatWindow::chatClosing)) {
+                *result = 0;
+            }
         }
     }
 }
@@ -107,14 +124,20 @@ int ChatWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 4)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 4;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 3)
+        if (_id < 4)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 3;
+        _id -= 4;
     }
     return _id;
+}
+
+// SIGNAL 0
+void ChatWindow::chatClosing()
+{
+    QMetaObject::activate(this, &staticMetaObject, 0, 0);
 }
 QT_END_MOC_NAMESPACE

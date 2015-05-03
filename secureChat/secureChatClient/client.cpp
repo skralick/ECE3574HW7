@@ -63,6 +63,8 @@ Client::Client(QWidget *parent) : QDialog(parent)
     connect(secureSocket, SIGNAL(error(QAbstractSocket::SocketError)),
             this, SLOT(displayError(QAbstractSocket::SocketError)));
 
+    m_shouldNotifyServerRemove = false;
+
 }
 
 void Client::requestNewFortune(QString hostIp, QString port, QString name)
@@ -139,7 +141,6 @@ void Client::displayCertificateWindow()
 
 void Client::readFortune()
 {
-    qDebug() << "readFortuneCalled";// << secureSocket->canReadLine();
     if(secureSocket->bytesAvailable() == 0){
         return;
     }
@@ -162,8 +163,13 @@ void Client::readFortune()
     currentFortune = nextFortune;
     qDebug() << currentFortune;
     if(currentFortune == "ClientNameTaken"){
+        m_shouldNotifyServerRemove = false;
         emit closeThisWindow();
+    }else if(currentFortune == "ConnectionSuccess"){
+        m_shouldNotifyServerRemove = true;
     }
+
+
     if(currentFortune.left(2)== "A:" && currentFortune.split(":")[1] != m_name){
         emit addClientToList(currentFortune.split(":")[1]);
     }else if(currentFortune.left(2)== "S:"){
@@ -172,7 +178,13 @@ void Client::readFortune()
         emit recievedMsg(currentFortune.split(":")[1] +":" + currentFortune.split(":")[3]);
     }else if(currentFortune.left(2)== "R:"){
         emit removePossibleClient(currentFortune.split(":")[1]);
+        if(currentFortune.split(":")[1] == m_partnerName){
+            emit writeStringToChatWindow("Partner disconnected");
+        }
         emit removePossibleConnectedClient(currentFortune.split(":")[1]);//this could be simpler send a bool also not working
+    }else if(currentFortune == "Server has closed"){
+        qDebug() << "server closing emitting";
+        emit writeStringToChatWindow(currentFortune);
     }
     emit recievedString(currentFortune);
     blockSize = 0;
@@ -233,7 +245,9 @@ void Client::sendMessageToPartner(QString msg){
     sendString("M:" + m_name + ":" + m_partnerName + ":" + msg);
 }
 void Client::exit(){
-    sendString("R:" + m_name);
+    if(m_shouldNotifyServerRemove){
+        sendString("R:" + m_name);
+    }
 }
 QString Client::getPartner(){
     return m_partnerName;

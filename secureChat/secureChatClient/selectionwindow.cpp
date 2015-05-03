@@ -56,6 +56,8 @@ void SelectionWindow::setClient(Client *client)
 void SelectionWindow::setName(QString name)
 {
     m_name = name;
+
+    this->setWindowTitle(name + "'s Selection Window");
 }
 
 //Function to add a client name to the combo box
@@ -69,8 +71,10 @@ void SelectionWindow::startChatWith(QString name)
 {
     //Set up communications by getting the name and client object
     m_client -> setPartnerName(name);
-    m_chatWindow.setName(m_name);
     m_chatWindow.setClient(m_client);
+    m_chatWindow.setName(m_name);
+
+    connect(&m_chatWindow, SIGNAL(chatClosing()), this, SLOT(show()));
     m_chatWindow.show();
     this -> hide();
 }

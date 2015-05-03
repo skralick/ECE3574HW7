@@ -59,6 +59,9 @@ private:
 protected:
     //Function to clsoe the window
     void closeEvent(QCloseEvent *event);
+
+signals:
+    void chatClosing();
 };
 
 #endif // CHATWINDOW_H
