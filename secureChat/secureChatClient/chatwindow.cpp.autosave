@@ -53,9 +53,10 @@ void ChatWindow::setName(QString name)
     m_name = name;
 }
 
+//Function to update the GUI with a newly received message
 void ChatWindow::recievedMsg(QString msg)
 {
-    ui->chatArea->append("<font color=red>" + msg.split(":")[0] + "</font>: " + msg.split(":")[1]);
+    ui -> chatArea->append("<font color=red>" + msg.split(":")[0] + "</font>: " + msg.split(":")[1]);
 }
 
 //Function to close the window and client object

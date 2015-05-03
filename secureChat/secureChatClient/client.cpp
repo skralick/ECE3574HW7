@@ -1,8 +1,12 @@
-/****************************************************************************
-  From the Qt examples
-  Modified to do a secure SSL connection
-****************************************************************************/
-
+/////////////////////////////////////////////
+//
+//       Assignment: ECE 3574 Homework 7
+//
+//       Name:       Stephen Kralick
+//       E-mail:     skralick@vt.edu
+//
+//
+/////////////////////////////////////////////
 #include <QtGui>
 #include <QtNetwork>
 #include <QDebug>
@@ -168,7 +172,7 @@ void Client::readFortune()
         emit recievedMsg(currentFortune.split(":")[1] +":" + currentFortune.split(":")[3]);
     }else if(currentFortune.left(2)== "R:"){
         emit removePossibleClient(currentFortune.split(":")[1]);
-        emit removePossibleConnectedClient(currentFortune.split(":")[1]);//this could be simpelr send a bool also not working
+        emit removePossibleConnectedClient(currentFortune.split(":")[1]);//this could be simpler send a bool also not working
     }
     emit recievedString(currentFortune);
     blockSize = 0;
