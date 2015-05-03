@@ -39,14 +39,14 @@ void SSLServer::incomingConnection(qintptr socketDescriptor)
     // and the private key that we generated 
     // with openssl.  Read the README to see
     // how these are generated.
-    secureSocket->setLocalCertificate("cacert.pem");
-    secureSocket->setPrivateKey("privkey.pem");
+    secureSocket -> setLocalCertificate("cacert.pem");
+    secureSocket -> setPrivateKey("privkey.pem");
 
     // Check that the certificate / private key are not null
-    if (secureSocket->localCertificate().isNull()) {
+    if (secureSocket -> localCertificate().isNull()) {
        qDebug() << "WARNING: The local certificate appears to be null! ";
     }
-    if (secureSocket->privateKey().isNull()) {
+    if (secureSocket -> privateKey().isNull()) {
        qDebug() << "WARNING: The private key appears to be null! ";
     }
 
@@ -55,11 +55,11 @@ void SSLServer::incomingConnection(qintptr socketDescriptor)
 
     // From incoming connection we obtain the socket descriptor,
     // we associate this with our new SSL socket
-    secureSocket->setSocketDescriptor(socketDescriptor);
+    secureSocket -> setSocketDescriptor(socketDescriptor);
 
     // Begin encryption.  Note from the documentation
     // all the key stuff must be done prior to doing this.
-    secureSocket->startServerEncryption();
+    secureSocket -> startServerEncryption();
     //qDebug() << "Started encryption for new secure socket";
 }
 
