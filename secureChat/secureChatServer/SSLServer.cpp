@@ -1,3 +1,12 @@
+/////////////////////////////////////////////
+//
+//       Assignment: ECE 3574 Homework 7
+//
+//       Name:       Stephen Kralick
+//       E-mail:     skralick@vt.edu
+//
+//
+/////////////////////////////////////////////
 #include <QDebug>
 #include "SSLServer.h"
 
@@ -9,11 +18,13 @@
 // the existing one passed in. It then initiates the SSL handshake by calling
 // startServerEncryption().
 
+//Constructor
 SSLServer::SSLServer(QObject *parent) : QTcpServer(parent)
 {
      //qDebug() << "Constructing SSLServer Object";
 }
 
+//Overloaded function to handle the incoming connection from a new client
 void SSLServer::incomingConnection(qintptr socketDescriptor)
 {
     // On an incoming connection we want
@@ -31,7 +42,7 @@ void SSLServer::incomingConnection(qintptr socketDescriptor)
     secureSocket->setLocalCertificate("cacert.pem");
     secureSocket->setPrivateKey("privkey.pem");
 
-    // check that the certificate / private key are not null
+    // Check that the certificate / private key are not null
     if (secureSocket->localCertificate().isNull()) {
        qDebug() << "WARNING: The local certificate appears to be null! ";
     }
@@ -52,15 +63,20 @@ void SSLServer::incomingConnection(qintptr socketDescriptor)
     //qDebug() << "Started encryption for new secure socket";
 }
 
+//Function to return the most recent connection made
 QSslSocket *SSLServer::nextPendingConnection()
 {
     QSslSocket *secureSocket = NULL;
+
+    //Check if the list of sockets is empty
     if (m_secureSocketList.isEmpty()) {
         qDebug() << "nextPendingConnection: ERROR: Why is this list empty??";
     } else {
+        //Pick up the most recently used socket
         secureSocket = m_secureSocketList.last();
         m_secureSocketList.removeLast();
     }
+    //Return the most recently used socket
     return secureSocket;
 }
 
