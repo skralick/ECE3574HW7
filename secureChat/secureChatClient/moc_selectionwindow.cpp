@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_SelectionWindow_t {
-    QByteArrayData data[10];
-    char stringdata[131];
+    QByteArrayData data[9];
+    char stringdata[109];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -30,20 +30,19 @@ struct qt_meta_stringdata_SelectionWindow_t {
 static const qt_meta_stringdata_SelectionWindow_t qt_meta_stringdata_SelectionWindow = {
     {
 QT_MOC_LITERAL(0, 0, 15),
-QT_MOC_LITERAL(1, 16, 21),
-QT_MOC_LITERAL(2, 38, 0),
-QT_MOC_LITERAL(3, 39, 19),
-QT_MOC_LITERAL(4, 59, 5),
-QT_MOC_LITERAL(5, 65, 13),
-QT_MOC_LITERAL(6, 79, 4),
-QT_MOC_LITERAL(7, 84, 24),
-QT_MOC_LITERAL(8, 109, 15),
-QT_MOC_LITERAL(9, 125, 4)
+QT_MOC_LITERAL(1, 16, 19),
+QT_MOC_LITERAL(2, 36, 0),
+QT_MOC_LITERAL(3, 37, 5),
+QT_MOC_LITERAL(4, 43, 13),
+QT_MOC_LITERAL(5, 57, 4),
+QT_MOC_LITERAL(6, 62, 24),
+QT_MOC_LITERAL(7, 87, 15),
+QT_MOC_LITERAL(8, 103, 4)
     },
-    "SelectionWindow\0on_sendButton_clicked\0"
-    "\0addClientToComboBox\0input\0startChatWith\0"
-    "name\0on_connectButton_clicked\0"
-    "takeItemFromBox\0item\0"
+    "SelectionWindow\0addClientToComboBox\0"
+    "\0input\0startChatWith\0name\0"
+    "on_connectButton_clicked\0takeItemFromBox\0"
+    "item\0"
 };
 #undef QT_MOC_LITERAL
 
@@ -53,7 +52,7 @@ static const uint qt_meta_data_SelectionWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       4,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -61,18 +60,16 @@ static const uint qt_meta_data_SelectionWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   39,    2, 0x08,
-       3,    1,   40,    2, 0x08,
-       5,    1,   43,    2, 0x08,
-       7,    0,   46,    2, 0x08,
-       8,    1,   47,    2, 0x08,
+       1,    1,   34,    2, 0x08,
+       4,    1,   37,    2, 0x08,
+       6,    0,   40,    2, 0x08,
+       7,    1,   41,    2, 0x08,
 
  // slots: parameters
+    QMetaType::Void, QMetaType::QString,    3,
+    QMetaType::Void, QMetaType::QString,    5,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,    4,
-    QMetaType::Void, QMetaType::QString,    6,
-    QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,    9,
+    QMetaType::Void, QMetaType::QString,    8,
 
        0        // eod
 };
@@ -82,11 +79,10 @@ void SelectionWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
     if (_c == QMetaObject::InvokeMetaMethod) {
         SelectionWindow *_t = static_cast<SelectionWindow *>(_o);
         switch (_id) {
-        case 0: _t->on_sendButton_clicked(); break;
-        case 1: _t->addClientToComboBox((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 2: _t->startChatWith((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 3: _t->on_connectButton_clicked(); break;
-        case 4: _t->takeItemFromBox((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 0: _t->addClientToComboBox((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 1: _t->startChatWith((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 2: _t->on_connectButton_clicked(); break;
+        case 3: _t->takeItemFromBox((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -117,13 +113,13 @@ int SelectionWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 4)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 4;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 5)
+        if (_id < 4)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 5;
+        _id -= 4;
     }
     return _id;
 }

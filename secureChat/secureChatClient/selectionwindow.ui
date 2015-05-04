@@ -6,36 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>401</width>
-    <height>128</height>
+    <width>400</width>
+    <height>78</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLineEdit" name="sendLine">
-   <property name="geometry">
-    <rect>
-     <x>12</x>
-     <y>80</y>
-     <width>261</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="sendButton">
-   <property name="geometry">
-    <rect>
-     <x>288</x>
-     <y>80</y>
-     <width>91</width>
-     <height>27</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Send</string>
-   </property>
-  </widget>
   <widget class="QComboBox" name="clientSelectBox">
    <property name="geometry">
     <rect>

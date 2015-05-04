@@ -37,9 +37,6 @@ public:
     void setName(QString name);
 
 private slots:
-    //Function to update the GUI upon clicking the send button
-    void on_sendButton_clicked();
-
     //Function to add a client name to the combo box
     void addClientToComboBox(QString input);
 

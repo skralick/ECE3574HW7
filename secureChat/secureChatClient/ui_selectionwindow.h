@@ -16,7 +16,6 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
 
@@ -25,8 +24,6 @@ QT_BEGIN_NAMESPACE
 class Ui_SelectionWindow
 {
 public:
-    QLineEdit *sendLine;
-    QPushButton *sendButton;
     QComboBox *clientSelectBox;
     QPushButton *connectButton;
     QLabel *label;
@@ -35,13 +32,7 @@ public:
     {
         if (SelectionWindow->objectName().isEmpty())
             SelectionWindow->setObjectName(QStringLiteral("SelectionWindow"));
-        SelectionWindow->resize(401, 128);
-        sendLine = new QLineEdit(SelectionWindow);
-        sendLine->setObjectName(QStringLiteral("sendLine"));
-        sendLine->setGeometry(QRect(12, 80, 261, 31));
-        sendButton = new QPushButton(SelectionWindow);
-        sendButton->setObjectName(QStringLiteral("sendButton"));
-        sendButton->setGeometry(QRect(288, 80, 91, 27));
+        SelectionWindow->resize(400, 78);
         clientSelectBox = new QComboBox(SelectionWindow);
         clientSelectBox->setObjectName(QStringLiteral("clientSelectBox"));
         clientSelectBox->setGeometry(QRect(14, 30, 251, 27));
@@ -60,7 +51,6 @@ public:
     void retranslateUi(QWidget *SelectionWindow)
     {
         SelectionWindow->setWindowTitle(QApplication::translate("SelectionWindow", "Form", 0));
-        sendButton->setText(QApplication::translate("SelectionWindow", "Send", 0));
         connectButton->setText(QApplication::translate("SelectionWindow", "Connect", 0));
         label->setText(QApplication::translate("SelectionWindow", "ChatClient", 0));
     } // retranslateUi

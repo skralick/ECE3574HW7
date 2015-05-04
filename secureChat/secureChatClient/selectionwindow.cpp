@@ -24,12 +24,6 @@ SelectionWindow::~SelectionWindow()
     delete ui;
 }
 
-//Sends the string in the line edit
-void SelectionWindow::on_sendButton_clicked()
-{
-    m_client -> sendString(ui -> sendLine -> displayText());
-}
-
 //Sets up all the connections to use the window/GUI
 void SelectionWindow::setClient(Client *client)
 {
