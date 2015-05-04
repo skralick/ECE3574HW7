@@ -29,17 +29,22 @@ ChatWindow::~ChatWindow()
 //Function to set up the client object and its connections to the GUI
 void ChatWindow::setClient(Client *client)
 {
+    bool shouldConnect = true;
+    if(m_client == client){
+        shouldConnect = false;
+    }
     //Set up the client object
     m_client = client;
+    if(shouldConnect){
+        //Connection for receiving a message and updating the GUI
+        connect(m_client, SIGNAL(recievedMsg(QString)), this, SLOT(recievedMsg(QString)));
 
-    //Connection for receiving a message and updating the GUI
-    connect(m_client, SIGNAL(recievedMsg(QString)), this, SLOT(recievedMsg(QString)));
+        //Connection to remove connection to another client
+        //connect(m_client, SIGNAL(removePossibleConnectedClient(QString)), this, SLOT(removePossiblePartner(QString)));
+        //good spot to connect more client connections
 
-    //Connection to remove connection to another client
-    //connect(m_client, SIGNAL(removePossibleConnectedClient(QString)), this, SLOT(removePossiblePartner(QString)));
-    //good spot to connect more client connections
-
-    connect(m_client, SIGNAL(writeStringToChatWindow(QString)), ui->chatArea, SLOT(append(QString)));
+        connect(m_client, SIGNAL(writeStringToChatWindow(QString)), ui->chatArea, SLOT(append(QString)));
+    }
 }
 
 
@@ -60,6 +65,7 @@ void ChatWindow::setName(QString name)
 
 void ChatWindow::recievedMsg(QString msg)
 {
+    qDebug() << "revieved x times";
     ui->chatArea->append("<font color=red>" + msg.split(":")[0] + "</font>: " + msg.split(":")[1]);
 }
 
