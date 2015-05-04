@@ -14,13 +14,10 @@
 
 Client::Client(QWidget *parent) : QDialog(parent)
 {
-    //hostLabel = new QLabel(tr("&Server name:"));
-    //portLabel = new QLabel(tr("S&erver port:"));
-
-    // find out which IP to connect to
+    // Find out which IP to connect to
     QString ipAddress;
     QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
-    // use the first non-localhost IPv4 address
+    // Use the first non-localhost IPv4 address
     for (int i = 0; i < ipAddressesList.size(); ++i) {
         if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
             ipAddressesList.at(i).toIPv4Address()) {
@@ -28,86 +25,76 @@ Client::Client(QWidget *parent) : QDialog(parent)
             break;
         }
     }
-    // if we did not find one, use IPv4 localhost
+    // If we did not find one, use IPv4 localhost
     if (ipAddress.isEmpty())
         ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
 
-    //hostLineEdit = new QLineEdit(ipAddress);
-    //portLineEdit = new QLineEdit;
-    //portLineEdit->setValidator(new QIntValidator(1, 65535, this));
-
-    //hostLabel->setBuddy(hostLineEdit);
-    //portLabel->setBuddy(portLineEdit);
-
-    //statusLabel = new QLabel(tr("This examples requires that you run the "
-     //                           "Secure Fortune Server example as well."));
-
-    //getFortuneButton = new QPushButton(tr("Get Fortune"));
-    //getFortuneButton->setDefault(true);
-    //getFortuneButton->setEnabled(false);
-
-    //quitButton = new QPushButton(tr("Quit"));
-
-    //buttonBox = new QDialogButtonBox;
-    //buttonBox->addButton(getFortuneButton, QDialogButtonBox::ActionRole);
-    //buttonBox->addButton(quitButton, QDialogButtonBox::RejectRole);
-
     secureSocket = new QSslSocket(this);
 
-    // special slot to handle errors with the certificates
-    // in particular the fact that they are self-signed
+    //Connection that allows the socket to handle errors with certificates
+    //Particularly, self-signed certificates
     connect(secureSocket, SIGNAL(sslErrors(QList<QSslError>)), this,
             SLOT(handleSSLError(QList<QSslError>)));
 
+    //Connection that allows the object to read a new message
     connect(secureSocket, SIGNAL(readyRead()), this, SLOT(readFortune()));
+
+    //Connection to handle all other socket errors
     connect(secureSocket, SIGNAL(error(QAbstractSocket::SocketError)),
             this, SLOT(displayError(QAbstractSocket::SocketError)));
 
+    //Boolean for preventing repeated names
     m_shouldNotifyServerRemove = false;
 
 }
 
+//Function to receive a new message
 void Client::requestNewFortune(QString hostIp, QString port, QString name)
 {
+    //Sets up the message size and client name
     blockSize = 0;
     m_name = name;
-    secureSocket->abort();
-    secureSocket->setPeerVerifyMode(QSslSocket::QueryPeer);
-    secureSocket->connectToHostEncrypted(hostIp,
+
+    //Wait for message
+    secureSocket -> abort();
+    secureSocket -> setPeerVerifyMode(QSslSocket::QueryPeer);
+    secureSocket -> connectToHostEncrypted(hostIp,
                              port.toInt());
-    if (!secureSocket->waitForEncrypted(1000)) {
+    //Checks whether or not the client can connect to the server
+    if (!secureSocket -> waitForEncrypted(1000)) {
          QMessageBox::critical(this, "ERROR", "ERROR: Could not connect to host");
          return;
     }
-    QSslCertificate peerCertificate = secureSocket->peerCertificate();
+    //Checks the certificates
+    QSslCertificate peerCertificate = secureSocket -> peerCertificate();
     qDebug() << "Peer Certificate is: " << endl;
     qDebug() << peerCertificate << endl;
-    QSslCertificate localCertificate = secureSocket->localCertificate();
+    QSslCertificate localCertificate = secureSocket -> localCertificate();
     qDebug() << "Local Certificate is: " << endl;
     qDebug() << localCertificate << endl;
 
+    //Sends a message to the server to add the client
     sendString("A:" + name);
 }
 
+//Function to send a message to the server
 void Client::sendString(QString input)
 {
+    //Gets the message through a datastream
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
-    qDebug() << "In sendClient";
     out << (quint16)0;
-    //out << fortunes.at(qrand() % fortunes.size());
     out << input;
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
 
-    //connect(secureSocket, SIGNAL(readyRead()), this, SLOT(readIncomingMsg()));
-    secureSocket->write(block);
-    secureSocket->flush();
-    qDebug() << "the message has been sent";
-    //socketList["First"]->disconnectFromHost();
+    //Sends the message to the socket
+    secureSocket -> write(block);
+    secureSocket -> flush();
 }
 
+//Function to get the certificates
 QString Client::getCertificateString(const QSslCertificate &cert)
 {
     QString certInfo;
@@ -126,90 +113,95 @@ QString Client::getCertificateString(const QSslCertificate &cert)
     return certInfo;
 }
 
+//Function to display the certificates that the client has
 void Client::displayCertificateWindow()
 {
     certificateWindow.setWindowTitle("Certificate Information");
     certificateWindow.setMinimumSize(400,300);
     QString peerCertificateInformation("Peer Certificate Information:\n");
-    QSslCertificate peerCertificate = secureSocket->peerCertificate();
+    QSslCertificate peerCertificate = secureSocket -> peerCertificate();
     peerCertificateInformation += getCertificateString(peerCertificate);
     certificateWindow.append(peerCertificateInformation);
     QString localCertificateInformation("Local Certificate Information:\n");
-    QSslCertificate localCertificate = secureSocket->localCertificate();
+    QSslCertificate localCertificate = secureSocket -> localCertificate();
     localCertificateInformation += getCertificateString(localCertificate);
     certificateWindow.append(localCertificateInformation);
     certificateWindow.show();
 }
 
+//Function to read and interpret the new message
 void Client::readFortune()
 {
-    qDebug() << "recieved a fortune";
-    if(secureSocket->bytesAvailable() == 0){
+    //If there is no message end the function
+    if (secureSocket -> bytesAvailable() == 0) {
         return;
     }
+    //Get the message through a datastream
     QDataStream in(secureSocket);
     in.setVersion(QDataStream::Qt_4_0);
-    //blockSize = 0;
-    //if (blockSize == 0) {
-        //qDebug() << "blockSize was zero";
-        //if (secureSocket->bytesAvailable() < (int)sizeof(quint16))
-            //return;
-        in >> blockSize;
-    //}
-    qDebug() << "blocksize" << blockSize << "bytes avail" << secureSocket->bytesAvailable();
-    if (secureSocket->bytesAvailable() < blockSize)
-        return;
+    in >> blockSize;
 
+    //Check if the message received by the client and the message sent are different sizes
+    if (secureSocket -> bytesAvailable() < blockSize) {
+        return;
+    }
+
+    //Convert the message into a QString
     QString nextFortune;
     in >> nextFortune;
 
+    //Update the private variable
     currentFortune = nextFortune;
-    qDebug() << currentFortune;
-    if(currentFortune == "ClientNameTaken"){
+
+    //If the object is new, check if the name is available for connection
+    if (currentFortune == "ClientNameTaken") {
         QMessageBox msgBox;
         msgBox.setText("This name has already been used!");
         msgBox.exec();
         m_shouldNotifyServerRemove = false;
         emit closeThisWindow();
-    }else if(currentFortune == "ConnectionSuccess"){
+    } else if (currentFortune == "ConnectionSuccess") {
         m_shouldNotifyServerRemove = true;
     }
 
-
-    if(currentFortune.left(2)== "A:" && currentFortune.split(":")[1] != m_name){
-        emit addClientToList(currentFortune.split(":")[1]);
-    }else if(currentFortune.left(2)== "S:"){
+    //Processes other codes
+    //Adds a client
+    if (currentFortune.left(2)== "A:" && currentFortune.split(":")[1] != m_name) {
+        emit addClientToList(currentFortune.split(":")[1]); //Adds to the list for the combo box
+    //Starting a chat between clients
+    } else if (currentFortune.left(2)== "S:") {
         emit startChatWith(currentFortune.split(":")[1]);
-    }else if(currentFortune.left(2)== "M:"){
+    //Receiving a message
+    } else if (currentFortune.left(2)== "M:") {
         emit recievedMsg(currentFortune.split(":")[1] +":" + currentFortune.split(":")[3]);
-    }else if(currentFortune.left(2)== "R:"){
+    //Removing a user because they disconnected
+    } else if (currentFortune.left(2)== "R:") {
         emit removePossibleClient(currentFortune.split(":")[1]);
-        if(currentFortune.split(":")[1] == m_partnerName){
-            qDebug() << "your partner didnt just disconnet";
+        if (currentFortune.split(":")[1] == m_partnerName) {
+            qDebug() << "your partner didnt just disconnect";
             emit writeStringToChatWindow("Partner disconnected");
         }
-        //emit removePossibleConnectedClient(currentFortune.split(":")[1]);//this could be simpler send a bool also not working
-    }else if(currentFortune.left(2)== "E:" && currentFortune.split(":")[1] != m_name ){
+    //Clients entering a chat with each other
+    } else if (currentFortune.left(2)== "E:" && currentFortune.split(":")[1] != m_name ) {
         emit removePossibleClient(currentFortune.split(":")[1]);
-    }else if(currentFortune == "Server has closed"){
-        qDebug() << "server closing emitting";
+    //The server object has closed before the client object
+    } else if (currentFortune == "Server has closed") {
         emit writeStringToChatWindow(currentFortune);
-    }else if(currentFortune.left(2) == "D:" && currentFortune.split(":")[1] == m_partnerName){
+    } else if (currentFortune.left(2) == "D:" && currentFortune.split(":")[1] == m_partnerName) {
         emit writeStringToChatWindow("Partner disconnected");//your partner sent a D: to you
         emit addClientToList(currentFortune.split(":")[1]);//so add them to your clients you can add
-    }else if(currentFortune.left(2) == "D:" && currentFortune.split(":")[1] == m_name){
+    } else if (currentFortune.left(2) == "D:" && currentFortune.split(":")[1] == m_name) {
         //you were the one to send it out dont do anytihng
-    }else if(currentFortune.left(2) == "D:" ){
+    } else if(currentFortune.left(2) == "D:" ) {
         //you observed a converstaion end add them both to your clientlist
         emit addClientToList(currentFortune.split(":")[1]);
     }
+    //Restart the message
     blockSize = 0;
 
-    if(secureSocket->bytesAvailable() > 0){
+    if (secureSocket -> bytesAvailable() > 0) {
         readFortune();
     }
-    //statusLabel->setText(currentFortune);
-    //getFortuneButton->setEnabled(true);
 }
 
 void Client::displayError(QAbstractSocket::SocketError socketError)
@@ -234,8 +226,6 @@ void Client::displayError(QAbstractSocket::SocketError socketError)
                                  tr("The following error occurred: %1.")
                                  .arg(secureSocket->errorString()));
     }
-
-    //getFortuneButton->setEnabled(true);
 }
 
 void Client::enableGetFortuneButton()

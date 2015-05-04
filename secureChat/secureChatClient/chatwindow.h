@@ -61,6 +61,7 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 signals:
+    //Signals the user leaving the chat
     void chatClosing();
 };
 

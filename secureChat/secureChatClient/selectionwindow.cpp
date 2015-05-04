@@ -48,7 +48,7 @@ void SelectionWindow::setName(QString name)
 {
     m_name = name;
 
-    this->setWindowTitle(name + "'s Selection Window");
+    this -> setWindowTitle(name + "'s Selection Window");
 }
 
 //Function to add a client name to the combo box

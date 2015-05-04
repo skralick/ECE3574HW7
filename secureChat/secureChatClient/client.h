@@ -97,7 +97,7 @@ private:
     //Partner client name
     QString m_partnerName;
 
-    //windows should only notify others of their closing if they are good
+    //Windows should only notify others of their closing if they are good
     bool m_shouldNotifyServerRemove;
 
 signals:
@@ -119,6 +119,7 @@ signals:
     //Signals the removal of the client you're trying to connect to
     void removePossibleConnectedClient(QString client);
 
+    //Signals a message to the chat window
     void writeStringToChatWindow(QString string);
 };
 

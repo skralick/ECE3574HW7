@@ -16,8 +16,12 @@ ChatWindow::ChatWindow(QWidget *parent) :
     ui(new Ui::ChatWindow)
 {
     ui->setupUi(this);
-    connect(ui->msgEdit, SIGNAL(returnPressed()), ui->SendButton, SLOT(click()));
-    connect(ui->exitButton, SIGNAL(clicked()), this, SLOT(close()));
+
+    //Connection to send a message using the enter button as if the send button was clicked
+    connect(ui -> msgEdit, SIGNAL(returnPressed()), ui -> SendButton, SLOT(click()));
+
+    //Connection to connect the quit button to closing the window
+    connect(ui -> exitButton, SIGNAL(clicked()), this, SLOT(close()));
 }
 
 //Destructor
@@ -30,21 +34,18 @@ ChatWindow::~ChatWindow()
 void ChatWindow::setClient(Client *client)
 {
     bool shouldConnect = true;
-    if(m_client == client){
+    if (m_client == client) {
         shouldConnect = false;
-        ui->chatArea->clear();
+        ui -> chatArea -> clear();
     }
     //Set up the client object
     m_client = client;
-    if(shouldConnect){
+    if (shouldConnect) {
         //Connection for receiving a message and updating the GUI
         connect(m_client, SIGNAL(recievedMsg(QString)), this, SLOT(recievedMsg(QString)));
 
-        //Connection to remove connection to another client
-        //connect(m_client, SIGNAL(removePossibleConnectedClient(QString)), this, SLOT(removePossiblePartner(QString)));
-        //good spot to connect more client connections
-
-        connect(m_client, SIGNAL(writeStringToChatWindow(QString)), ui->chatArea, SLOT(append(QString)));
+        //Connection to update the GUI after the client sends its message
+        connect(m_client, SIGNAL(writeStringToChatWindow(QString)), ui -> chatArea, SLOT(append(QString)));
     }
 }
 
@@ -52,7 +53,10 @@ void ChatWindow::setClient(Client *client)
 //Function to update the chat window once connected to the other client
 void ChatWindow::on_SendButton_clicked()
 {
+    //Send message through client object
     m_client -> sendMessageToPartner(ui -> msgEdit -> displayText());
+
+    //Update GUI
     ui -> chatArea -> append("<font color=blue>" + m_name + "</font>: " + ui -> msgEdit -> displayText());
     ui -> msgEdit -> clear();
 }
@@ -61,22 +65,23 @@ void ChatWindow::on_SendButton_clicked()
 void ChatWindow::setName(QString name)
 {
     m_name = name;
-    this->setWindowTitle(name + "'s Chat Window");
+    this -> setWindowTitle(name + "'s Chat Window");
 }
 
+//Funtion to update the GUI from a received message
 void ChatWindow::recievedMsg(QString msg)
 {
-    qDebug() << "revieved x times";
-    ui->chatArea->append("<font color=red>" + msg.split(":")[0] + "</font>: " + msg.split(":")[1]);
+    ui -> chatArea -> append("<font color=red>" + msg.split(":")[0] + "</font>: " + msg.split(":")[1]);
 }
 
 //Function to close the window and client object
 void ChatWindow::closeEvent(QCloseEvent *event)
 {
+    //Emits the signal that the client is leaving the chat
     emit chatClosing();
+
+    //Ends the chat with the partner
     m_client -> endChat();
-    //Closing client object
-    //m_client -> exit();
 }
 
 //Function to remove the connection to the partner client and close the window
