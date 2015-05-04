@@ -109,12 +109,10 @@ void Server::sendString(QString input)
     //Transfers message from the datastream to the block
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
-    //qDebug() << "In sendClient";
     out << (quint16)0;
     out << input;
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
-    qDebug() << "sening a message to most recent socket";
     //Sends the message to the newly added socket
     m_tempSocket->write(block);
     m_tempSocket->flush();
@@ -179,7 +177,6 @@ void Server::readIncomingMsg()
 
     //Loop to check for a message from any of the currently available clients (sockets)
     while (i != m_socketList.constEnd()) {
-        //qDebug() << i.key() << ": " << i.value()->bytesAvailable() << endl;
 
         //Check for an available message
         if(i.value() -> bytesAvailable()){
@@ -230,7 +227,6 @@ void Server::readIncomingMsg()
         //Look to check if the name of the new client is already taken
         while (i != m_socketList.constEnd()) {
             if(i.key() == nextFortune.split(":")[1]){
-                qDebug() << "refusing someone service";
                 msg = "ClientNameTaken";
                 sendString(msg);
                 return;
