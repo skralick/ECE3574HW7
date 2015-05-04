@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>832</width>
-    <height>350</height>
+    <width>401</width>
+    <height>128</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,16 +34,6 @@
    </property>
    <property name="text">
     <string>Send</string>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="receiveArea">
-   <property name="geometry">
-    <rect>
-     <x>13</x>
-     <y>120</y>
-     <width>371</width>
-     <height>221</height>
-    </rect>
    </property>
   </widget>
   <widget class="QComboBox" name="clientSelectBox">

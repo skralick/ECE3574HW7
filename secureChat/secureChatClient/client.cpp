@@ -203,7 +203,6 @@ void Client::readFortune()
         //you observed a converstaion end add them both to your clientlist
         emit addClientToList(currentFortune.split(":")[1]);
     }
-    emit recievedString(currentFortune);
     blockSize = 0;
 
     if(secureSocket->bytesAvailable() > 0){

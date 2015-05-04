@@ -36,9 +36,6 @@ void SelectionWindow::setClient(Client *client)
     //Sets up the client object
     m_client = client;
 
-    //Connection to update the GUI when receiving a message
-    connect(m_client, SIGNAL(recievedString(QString)), ui -> receiveArea, SLOT(append(QString)));
-
     //Connection to close the window when the object signals it to
     connect(m_client, SIGNAL(closeThisWindow()), this, SLOT(close()));
 

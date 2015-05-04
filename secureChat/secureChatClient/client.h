@@ -101,9 +101,6 @@ private:
     bool m_shouldNotifyServerRemove;
 
 signals:
-    //Signals a new message is received
-    void recievedString(QString string);
-
     //Signals the windows need to close
     void closeThisWindow();
 
