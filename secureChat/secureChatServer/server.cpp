@@ -294,6 +294,7 @@ void Server::readIncomingMsg()
         //Update GUI of the two clients chatting
         emit displayString("Starting conversation with: " + nextFortune.split(":")[1] + " and " + nextFortune.split(":")[2]);
     } else if (nextFortune.left(2) == "D:") {
+        emit displayString(nextFortune.split(":")[1] + " has left their converstaion");
         sendStringToAllClients(nextFortune);
     }
 

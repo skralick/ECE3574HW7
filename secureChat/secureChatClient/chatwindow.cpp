@@ -32,6 +32,7 @@ void ChatWindow::setClient(Client *client)
     bool shouldConnect = true;
     if(m_client == client){
         shouldConnect = false;
+        ui->chatArea->clear();
     }
     //Set up the client object
     m_client = client;

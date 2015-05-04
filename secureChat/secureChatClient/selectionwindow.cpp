@@ -73,6 +73,9 @@ void SelectionWindow::startChatWith(QString name)
 //Send the server who you want to connect with
 void SelectionWindow::on_connectButton_clicked()
 {
+    if(ui->clientSelectBox->currentText() == ""){
+        return;
+    }
     //Update the client object and let the server know
     m_client -> setPartnerName(ui -> clientSelectBox -> currentText());
     m_client -> sendString("S:" + m_name + ":" + ui -> clientSelectBox -> currentText());
